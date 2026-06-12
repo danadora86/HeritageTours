@@ -1,0 +1,145 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #dff5ee;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 800px;
+  margin: 60px auto;
+  background: white;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+h1 {
+  text-align: center;
+  color: #1f5c4d;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #4b6b63;
+  margin-bottom: 35px;
+}
+
+.search-box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+input {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #b7d8cf;
+  font-size: 16px;
+}
+
+button {
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #2f8f73;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #256f59;
+}
+
+#message h3 {
+  color: #1f5c4d;
+  margin-bottom: 5px;
+}
+
+#message p {
+  color: #444;
+  line-height: 1.6;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #d9ece5;
+  margin: 25px 0;
+}
+.tour-card {
+  border-top: 1px solid #d9ece5;
+  padding: 22px 0;
+}
+#map {
+  height: 400px;
+  width: 100%;
+  margin-top: 30px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.login-box {
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 20px;
+
+}
+
+#usernameInput,
+#passwordInput {
+
+  width: 160px;
+
+}
+
+#loginMessage {
+
+  text-align: right;
+  margin-bottom: 20px;
+
+  color: #1b5e20;
+  font-weight: 500;
+
+}
+#adminBookings {
+
+  margin-top: 30px;
+
+}
+
+.booking-card {
+
+  background: #ffffff;
+
+  padding: 20px;
+
+  margin-bottom: 20px;
+
+  border-radius: 14px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+  border-left: 6px solid #2f8f6b;
+
+}
+
+.booking-card p {
+
+  margin-bottom: 10px;
+
+}
+.tour-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 18px;
+}

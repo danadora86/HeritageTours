@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeritageTours</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet/dist/leaflet.css"
+/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="login-box">
+
+      <input
+        type="text"
+        id="usernameInput"
+        placeholder="Username"
+      >
+
+      <input
+        type="password"
+        id="passwordInput"
+        placeholder="Password"
+      >
+
+      <button id="loginButton">
+        👤 Login
+      </button>
+
+      <p id="loginMessage"></p>
+
+      <button id="logoutButton">
+        Logout
+      </button>
+
+    </div>
+
+    <h1>HeritageTours</h1>
+
+    <p class="subtitle">
+      Explore heritage tours across historic cities.
+    </p>
+
+        
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="cityInput"
+        placeholder="Enter city"
+      >
+
+      <input
+        type="text"
+        id="themeInput"
+        placeholder="Enter theme optional"
+      >
+
+      <button id="searchButton">
+        Search Tours
+      </button>
+
+    </div>
+
+    <div id="message"></div>
+
+    <div id="map"></div>
+
+    <h2>Admin Booking Panel</h2>
+
+    <button id="loadBookingsButton">
+      Load All Bookings
+    </button>
+
+<div id="adminBookings"></div>
+
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
