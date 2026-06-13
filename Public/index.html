@@ -2,27 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
+  <!-- Makes the page responsive on different screen sizes -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>HeritageTours</title>
 
+  <!-- Main project stylesheet -->
   <link rel="stylesheet" href="style.css">
 
+  <!-- Leaflet CSS for the interactive map -->
   <link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet/dist/leaflet.css"
-/>
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  >
 
+  <!-- Google Font used to improve readability and visual design -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
 </head>
 
 <body>
 
   <div class="container">
 
+    <!-- Login and logout area.
+         Sessions are managed by the Express backend. -->
     <div class="login-box">
 
       <input
@@ -41,22 +51,24 @@
         👤 Login
       </button>
 
-      <p id="loginMessage"></p>
-
       <button id="logoutButton">
         Logout
       </button>
 
     </div>
 
+    <!-- Login feedback message -->
+    <p id="loginMessage"></p>
+
+    <!-- Main page heading -->
     <h1>HeritageTours</h1>
 
     <p class="subtitle">
       Explore heritage tours across historic cities.
     </p>
 
-        
-
+    <!-- Search form.
+         AJAX is used in app.js to send requests without refreshing the page. -->
     <div class="search-box">
 
       <input
@@ -77,22 +89,116 @@
 
     </div>
 
+    <!-- Dynamic tour cards are displayed here -->
     <div id="message"></div>
 
+    <!-- Leaflet map container.
+         The map is created and controlled in app.js. -->
     <div id="map"></div>
 
-    <h2>Admin Booking Panel</h2>
+    <!-- Admin management area.
+         These actions are protected by backend admin-session checks. -->
+    <section class="admin-panel">
 
-    <button id="loadBookingsButton">
-      Load All Bookings
-    </button>
+      <h2>Admin Management Panel</h2>
 
-<div id="adminBookings"></div>
+      <!-- View all bookings -->
+      <button id="loadBookingsButton">
+        View All Bookings
+      </button>
+
+      <div id="adminBookings"></div>
+
+      <!-- Add a new tour/destination -->
+      <h3>Add New Tour / Destination</h3>
+
+      <input
+        type="text"
+        id="adminTitle"
+        placeholder="Tour title"
+      >
+
+      <input
+        type="text"
+        id="adminCity"
+        placeholder="City"
+      >
+
+      <input
+        type="text"
+        id="adminTheme"
+        placeholder="Theme"
+      >
+
+      <input
+        type="number"
+        id="adminLatitude"
+        placeholder="Latitude"
+        step="any"
+      >
+
+      <input
+        type="number"
+        id="adminLongitude"
+        placeholder="Longitude"
+        step="any"
+      >
+
+      <textarea
+        id="adminDescription"
+        placeholder="Tour description"
+      ></textarea>
+
+      <button id="addTourButton">
+        Add Tour
+      </button>
+
+      <p id="addTourMessage"></p>
+
+      <!-- Add availability / booking date for an existing tour -->
+      <h3>Add Booking Date / Availability</h3>
+
+      <input
+        type="number"
+        id="availabilityTourID"
+        placeholder="Tour ID"
+      >
+
+      <input
+        type="text"
+        id="availabilityDate"
+        placeholder="Date YYMMDD"
+      >
+
+      <input
+        type="number"
+        id="availabilityPlaces"
+        placeholder="Max places"
+      >
+
+      <button id="addAvailabilityButton">
+        Add Availability
+      </button>
+
+      <p id="availabilityMessage"></p>
+
+      <!-- View all tours/destinations -->
+      <h3>View All Tours</h3>
+
+      <button id="loadToursButton">
+        View All Tours
+      </button>
+
+      <div id="adminTours"></div>
+
+    </section>
 
   </div>
 
+  <!-- Leaflet JavaScript library must load before app.js -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+  <!-- Main frontend JavaScript file -->
   <script src="app.js"></script>
 
 </body>

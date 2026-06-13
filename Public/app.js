@@ -17,6 +17,10 @@ const tourImages = {
   "Walls and Vikings Experience": "images/Walls and Vikings Experience.jpg"
 };
 
+// -----------------------------
+// LOGIN
+// -----------------------------
+
 const loginButton = document.getElementById("loginButton");
 
 loginButton.addEventListener("click", () => {
@@ -48,6 +52,10 @@ loginButton.addEventListener("click", () => {
   });
 });
 
+// -----------------------------
+// LOGOUT
+// -----------------------------
+
 const logoutButton = document.getElementById("logoutButton");
 
 logoutButton.addEventListener("click", () => {
@@ -66,6 +74,10 @@ logoutButton.addEventListener("click", () => {
     passwordInput.value = "";
   });
 });
+
+// -----------------------------
+// SEARCH TOURS
+// -----------------------------
 
 const searchButton = document.getElementById("searchButton");
 
@@ -105,7 +117,8 @@ searchButton.addEventListener("click", () => {
       }
 
       tours.forEach(tour => {
-        const imagePath = tourImages[tour.title] || "images/Old Town Highlights Walk.jpg";
+        const imagePath =
+          tourImages[tour.title] || "images/Old Town Highlights Walk.jpg";
 
         messageElement.innerHTML += `
           <div class="tour-card">
@@ -118,23 +131,16 @@ searchButton.addEventListener("click", () => {
             <h3>${tour.title}</h3>
 
             <p><strong>City:</strong> ${tour.city}</p>
-
             <p><strong>Theme:</strong> ${tour.theme}</p>
-
             <p>${tour.description}</p>
+
+            <p><strong>Next available date:</strong> ${formatDate(tour.nextDate)}</p>
+            <p><strong>Places left:</strong> ${tour.maxPlaces}</p>
 
             <div
               id="availability-${tour.id}"
               class="availability-box"
             >
-              Loading available dates...
-            </div>
-
-            <p><strong>Next available date:</strong> ${formatDate(tour.nextDate)}</p>
-
-            <p><strong>Places left:</strong> ${tour.maxPlaces}</p>
-
-            <div id="availability-${tour.id}" class="availability-box">
               Loading available dates...
             </div>
           </div>
@@ -175,65 +181,7 @@ searchButton.addEventListener("click", () => {
 
         markers.push(marker);
 
-        fetch(`/api/tours/${tour.id}/availability`)
-          .then(response => response.json())
-          .then(dates => {
-
-            const availabilityBox =
-              document.getElementById(`availability-${tour.id}`);
-
-            if (!availabilityBox) return;
-
-            availabilityBox.innerHTML =
-              "<strong>Available dates:</strong>";
-
-            if (dates.length === 0) {
-
-              availabilityBox.innerHTML += `
-                <p>No available dates.</p>
-              `;
-
-              return;
-            }
-
-            dates.forEach(date => {
-
-              const formattedDate =
-                `20${date.theDate.substring(0,2)}-` +
-                `${date.theDate.substring(2,4)}-` +
-                `${date.theDate.substring(4,6)}`;
-
-              availabilityBox.innerHTML += `
-                <p>
-                  ${formattedDate}
-                  — ${date.maxPlaces} places left
-                </p>
-              `;
-
-            });
-
-          });
-
-        fetch(`/api/tours/${tour.id}/availability`)
-          .then(response => response.json())
-          .then(dates => {
-            const availabilityBox = document.getElementById(`availability-${tour.id}`);
-
-            if (!availabilityBox) return;
-
-            availabilityBox.innerHTML = "<strong>Available dates:</strong>";
-
-            if (dates.length === 0) {
-              availabilityBox.innerHTML += "<p>No available dates.</p>";
-              return;
-            }
-
-            dates.forEach(date => {
-              availabilityBox.innerHTML += `
-                <p>${formatDate(date.theDate)} — ${date.maxPlaces} places left</p>
-              `;
-            });
-          });
+        loadAvailabilityForTour(tour.id);
       });
 
       if (markers.length > 0) {
@@ -244,6 +192,38 @@ searchButton.addEventListener("click", () => {
       }
     });
 });
+
+// -----------------------------
+// AVAILABILITY DISPLAY
+// -----------------------------
+
+function loadAvailabilityForTour(tourID) {
+  fetch(`/api/tours/${tourID}/availability`)
+    .then(response => response.json())
+    .then(dates => {
+      const availabilityBox =
+        document.getElementById(`availability-${tourID}`);
+
+      if (!availabilityBox) return;
+
+      availabilityBox.innerHTML = "<strong>Available dates:</strong>";
+
+      if (dates.length === 0) {
+        availabilityBox.innerHTML += "<p>No available dates.</p>";
+        return;
+      }
+
+      dates.forEach(date => {
+        availabilityBox.innerHTML += `
+          <p>${formatDate(date.theDate)} — ${date.maxPlaces} places left</p>
+        `;
+      });
+    });
+}
+
+// -----------------------------
+// DATE FORMATTER
+// -----------------------------
 
 function formatDate(dateValue) {
   if (!dateValue) {
@@ -259,6 +239,10 @@ function formatDate(dateValue) {
     dateValue.substring(4, 6)
   );
 }
+
+// -----------------------------
+// BOOK TOUR
+// -----------------------------
 
 function bookTour(tourID, theDate, visitors) {
   fetch("/api/bookings", {
@@ -303,9 +287,17 @@ function bookTourFromPopup(tourID) {
   bookTour(tourID, theDate, visitors);
 }
 
+// -----------------------------
+// ADMIN: VIEW BOOKINGS
+// -----------------------------
+
 const loadBookingsButton = document.getElementById("loadBookingsButton");
 
 loadBookingsButton.addEventListener("click", () => {
+  loadAdminBookings();
+});
+
+function loadAdminBookings() {
   const adminBookings = document.getElementById("adminBookings");
 
   fetch("/api/admin/bookings")
@@ -326,6 +318,172 @@ loadBookingsButton.addEventListener("click", () => {
             <p><strong>Date:</strong> ${formatDate(booking.theDate)}</p>
             <p><strong>User:</strong> ${booking.username}</p>
             <p><strong>Visitors:</strong> ${booking.visitors}</p>
+
+            <button onclick="deleteBooking(${booking.id})">
+              Delete Booking
+            </button>
+          </div>
+        `;
+      });
+    });
+}
+
+// -----------------------------
+// ADMIN: DELETE BOOKING
+// -----------------------------
+
+function deleteBooking(bookingID) {
+  fetch(`/api/admin/bookings/${bookingID}`, {
+    method: "DELETE"
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message || data.error);
+    loadAdminBookings();
+  });
+}
+
+// -----------------------------
+// ADMIN: ADD TOUR
+// -----------------------------
+
+const addTourButton = document.getElementById("addTourButton");
+
+addTourButton.addEventListener("click", () => {
+  const addTourMessage = document.getElementById("addTourMessage");
+
+  const title = document.getElementById("adminTitle").value.trim();
+  const city = document.getElementById("adminCity").value.trim();
+  const theme = document.getElementById("adminTheme").value.trim();
+  const latitude = document.getElementById("adminLatitude").value.trim();
+  const longitude = document.getElementById("adminLongitude").value.trim();
+  const description =
+    document.getElementById("adminDescription").value.trim();
+
+  if (
+    title === "" ||
+    city === "" ||
+    theme === "" ||
+    latitude === "" ||
+    longitude === "" ||
+    description === ""
+  ) {
+    addTourMessage.textContent = "Please complete all tour fields.";
+    return;
+  }
+
+  fetch("/api/admin/tours", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      title: title,
+      city: city,
+      theme: theme,
+      latitude: latitude,
+      longitude: longitude,
+      description: description
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    addTourMessage.textContent = data.message || data.error;
+
+    if (data.tourID) {
+      addTourMessage.textContent += ` Tour ID: ${data.tourID}`;
+
+      document.getElementById("adminTitle").value = "";
+      document.getElementById("adminCity").value = "";
+      document.getElementById("adminTheme").value = "";
+      document.getElementById("adminLatitude").value = "";
+      document.getElementById("adminLongitude").value = "";
+      document.getElementById("adminDescription").value = "";
+    }
+  });
+});
+
+// -----------------------------
+// ADMIN: ADD AVAILABILITY
+// -----------------------------
+
+const addAvailabilityButton =
+  document.getElementById("addAvailabilityButton");
+
+addAvailabilityButton.addEventListener("click", () => {
+  const availabilityMessage =
+    document.getElementById("availabilityMessage");
+
+  const tourID =
+    document.getElementById("availabilityTourID").value.trim();
+
+  const theDate =
+    document.getElementById("availabilityDate").value.trim();
+
+  const maxPlaces =
+    document.getElementById("availabilityPlaces").value.trim();
+
+  if (tourID === "" || theDate === "" || maxPlaces === "") {
+    availabilityMessage.textContent =
+      "Please complete all availability fields.";
+    return;
+  }
+
+  fetch("/api/admin/availability", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      tourID: tourID,
+      theDate: theDate,
+      maxPlaces: maxPlaces
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    availabilityMessage.textContent = data.message || data.error;
+
+    if (data.availabilityID) {
+      availabilityMessage.textContent +=
+        ` Availability ID: ${data.availabilityID}`;
+
+      document.getElementById("availabilityTourID").value = "";
+      document.getElementById("availabilityDate").value = "";
+      document.getElementById("availabilityPlaces").value = "";
+    }
+  });
+});
+
+// -----------------------------
+// ADMIN: VIEW ALL TOURS
+// -----------------------------
+
+const loadToursButton = document.getElementById("loadToursButton");
+
+loadToursButton.addEventListener("click", () => {
+  const adminTours = document.getElementById("adminTours");
+
+  fetch("/api/admin/tours")
+    .then(response => response.json())
+    .then(data => {
+      adminTours.innerHTML = "";
+
+      if (data.error) {
+        adminTours.innerHTML = `<p>${data.error}</p>`;
+        return;
+      }
+
+      data.forEach(tour => {
+        adminTours.innerHTML += `
+          <div class="booking-card">
+            <p><strong>Tour ID:</strong> ${tour.id}</p>
+            <p><strong>Title:</strong> ${tour.title}</p>
+            <p><strong>City:</strong> ${tour.city}</p>
+            <p><strong>Theme:</strong> ${tour.theme}</p>
+            <p><strong>Latitude:</strong> ${tour.latitude}</p>
+            <p><strong>Longitude:</strong> ${tour.longitude}</p>
+            <p><strong>Description:</strong> ${tour.description}</p>
           </div>
         `;
       });
